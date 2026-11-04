@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>세균 증식 3D 다변수 함수 실험실</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+:root{--bg:#0b1020;--panel:#131d31;--panel2:#0e182a;--line:#293a56;--txt:#edf4ff;--muted:#9cacc5;--cyan:#68d9e8;--gold:#f2c66d}
+*{box-sizing:border-box}body{margin:0;min-width:980px;background:radial-gradient(ellipse at 15% 0%,#1a2b49,#0b1020 55%);color:var(--txt);font-family:Inter,"Noto Sans KR",system-ui,sans-serif}
+header{padding:24px 32px 18px;border-bottom:1px solid #ffffff18;display:flex;justify-content:space-between;align-items:center}.eyebrow{font-size:10px;letter-spacing:.2em;color:var(--cyan);font-weight:800}h1{font-size:25px;margin:7px 0 4px;letter-spacing:-.04em}.sub{font-size:12px;color:var(--muted)}.tag{font-size:10px;color:#bdeefa;border:1px solid #345a70;background:#10273a;border-radius:30px;padding:9px 13px}
+main{max-width:1600px;margin:auto;padding:22px 28px 30px;display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:17px}.panel{background:linear-gradient(145deg,#17233aee,#111b2eee);border:1px solid var(--line);border-radius:16px;box-shadow:0 15px 38px #0005}.plot-head{padding:16px 19px 4px;display:flex;justify-content:space-between}.plot-head h2,.section h2{font-size:14px;margin:0}.hint{font-size:10px;color:var(--muted)}#plot{height:610px;width:100%}.plot-foot{padding:0 19px 15px;color:var(--muted);font-size:10px;display:flex;gap:18px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.side{display:flex;flex-direction:column;gap:13px}.section{padding:17px 18px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.mini{font-size:9px;color:var(--muted);letter-spacing:.12em}.control{padding:11px 0;border-top:1px solid #ffffff12}.control:first-of-type{border:0}.ctop{display:flex;justify-content:space-between;margin-bottom:7px}.control label{font-size:11px;color:#dce8f8}.val{font-size:11px;color:var(--cyan);font-weight:800;font-variant-numeric:tabular-nums}input[type=range]{width:100%;accent-color:var(--cyan);cursor:pointer}.ends{display:flex;justify-content:space-between;color:#7185a4;font-size:9px;margin-top:2px}
+.actions{display:flex;gap:8px;margin-top:12px}button{border:1px solid #3a5272;background:#1b2d49;color:#eaf4ff;border-radius:8px;padding:9px 12px;font-size:10px;font-weight:700;cursor:pointer}button:hover{background:#254366}.primary{background:#16465a;border-color:#28778a}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:#0c1729;border:1px solid #263954;border-radius:9px;padding:10px}.sk{font-size:9px;color:var(--muted)}.sv{font-size:18px;font-weight:800;margin-top:4px}.su{font-size:9px;color:#7f91ad;margin-top:2px}
+.formula{background:#0b1526;border:1px solid #2a3c58;border-radius:9px;padding:11px;margin:9px 0;text-align:center;color:#d9f7ff;font:16px Georgia,serif;line-height:1.6}.section p,.info p,.info li{font-size:10px;color:#afbdd1;line-height:1.7}.bottom{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:13px}.info{padding:16px 18px}.info h3{font-size:12px;margin:0 0 8px}.info ul{padding-left:17px;margin:5px 0}.note{margin-top:8px;border-left:3px solid var(--gold);padding:8px 10px;background:#f2c66d10;color:#d9c99e;font-size:9px;line-height:1.6;border-radius:0 7px 7px 0}footer{text-align:center;padding:0 20px 22px;color:#657895;font-size:9px}
+@media(max-width:1100px){main{padding:15px;grid-template-columns:minmax(0,1fr) 315px}#plot{height:540px}}
+</style></head><body>
+<header><div><div class="eyebrow">CALCULUS · MULTIVARIABLE FUNCTION LAB</div><h1>세균 증식의 3차원 다변수 로지스틱 모델</h1><div class="sub">시간과 항생제 농도를 바꾸며 세균 개체수 표면의 변화를 관찰하는 인터랙티브 실험실</div></div><div class="tag">PC INTERACTIVE · 3D SURFACE</div></header>
+<main>
+<section class="panel"><div class="plot-head"><h2>입체 함수 표면 · P(t, C)</h2><span class="hint">드래그: 회전　휠: 확대/축소　더블클릭: 초기 시점</span></div><div id="plot"></div><div class="plot-foot"><span><i class="dot" style="background:#68d9e8"></i>Z축: 세균 개체수 P</span><span><i class="dot" style="background:#719cff"></i>X축: 시간 t</span><span><i class="dot" style="background:#f2c66d"></i>Y축: 항생제 농도 C</span></div></section>
+<aside class="side">
+<section class="panel section"><div class="section-head"><h2>모델 변수 조절</h2><span class="mini">LIVE SLIDERS</span></div>
+<div class="control"><div class="ctop"><label for="p0">초기 세균 수 P₀</label><span class="val" id="p0v">10</span></div><input id="p0" type="range" min="2" max="40" step="1" value="10"><div class="ends"><span>2</span><span>40</span></div></div>
+<div class="control"><div class="ctop"><label for="k">환경수용력 K</label><span class="val" id="kv">100</span></div><input id="k" type="range" min="50" max="200" step="5" value="100"><div class="ends"><span>50</span><span>200</span></div></div>
+<div class="control"><div class="ctop"><label for="r">기본 증식률 r</label><span class="val" id="rv">0.80</span></div><input id="r" type="range" min="0.1" max="1.5" step="0.05" value="0.8"><div class="ends"><span>0.10</span><span>1.50</span></div></div>
+<div class="control"><div class="ctop"><label for="beta">항생제 민감도 β</label><span class="val" id="betav">0.20</span></div><input id="beta" type="range" min="0.02" max="0.8" step="0.01" value="0.2"><div class="ends"><span>0.02</span><span>0.80</span></div></div>
+<div class="control"><div class="ctop"><label for="cmax">표시할 최대 농도 C</label><span class="val" id="cmaxv">5.00</span></div><input id="cmax" type="range" min="1" max="10" step="0.5" value="5"><div class="ends"><span>1</span><span>10</span></div></div>
+<div class="actions"><button class="primary" id="reset">기본값 복원</button><button id="camera">시점 초기화</button></div></section>
+<section class="panel section"><h2 style="margin-bottom:11px">현재 모델의 핵심 값</h2><div class="statgrid">
+<div class="stat"><div class="sk">선택 농도 C*</div><div class="sv" id="cstar">2.50</div><div class="su">농도 단위</div></div>
+<div class="stat"><div class="sk">유효 증식률 g</div><div class="sv" id="gval">0.30</div><div class="su">g = r − βC*</div></div>
+<div class="stat"><div class="sk">최대 증식 속도</div><div class="sv" id="vmax">7.50</div><div class="su">gK / 4 (g &gt; 0일 때)</div></div>
+<div class="stat"><div class="sk">변곡점 개체수</div><div class="sv" id="inflect">50.0</div><div class="su">K / 2 (g &gt; 0일 때)</div></div></div><p style="margin-bottom:0">C*는 농도 범위의 중간값입니다. 표면의 모든 점은 시간 t와 농도 C의 한 조합을 나타냅니다.</p></section>
+<section class="panel section"><h2>사용한 다변수 함수</h2><div class="formula">P(t,C) = K / [1 + A e<sup>−(r−βC)t</sup>]</div><p>A = (K − P₀) / P₀이며, t는 시간, C는 항생제 농도, P는 세균 개체수입니다.</p><div class="formula" style="font-size:14px">∂P/∂C = −K A β t e<sup>−gt</sup> / (1 + A e<sup>−gt</sup>)²</div><p>∂P/∂C는 시간을 고정했을 때 항생제 농도 변화가 세균 수에 미치는 순간적인 영향을 나타냅니다.</p></section>
+</aside>
+<section class="bottom">
+<div class="panel info"><h3>3D 표면 읽는 방법</h3><ul><li><b>X축(t)</b>: 시간이 흐를수록 세균 수가 어떻게 변하는지 확인합니다.</li><li><b>Y축(C)</b>: 항생제 농도를 높였을 때 표면의 높이(Z)가 어떻게 달라지는지 봅니다.</li><li><b>Z축(P)</b>: 해당 시간과 농도에서 모델이 나타내는 세균 개체수입니다.</li><li>슬라이더를 조절하면 함수 표면과 요약 값이 즉시 다시 계산됩니다.</li></ul></div>
+<div class="panel info"><h3>모델의 가정과 한계</h3><p>항생제 농도가 유효 증식률을 g = r − βC처럼 선형적으로 낮춘다고 가정한 <b>교육용 단순화 모델</b>입니다. 실제 억제환 크기나 임상적 항생제 효과를 직접 예측하는 검증된 식은 아닙니다. 실제 결과에는 약물 확산, 배지 조건, 균주, 노출 시간, 최소억제농도(MIC) 등도 영향을 줍니다.</p><div class="note">g &gt; 0이면 증식, g = 0이면 모델상 개체수 변화가 없고, g &lt; 0이면 감소합니다. P₀는 t = 0에서의 초기값입니다.</div></div>
+</section></main><footer>학습용 시뮬레이션 · 실제 실험 데이터에 맞춘 추정이나 의학적 판단에 사용하지 마세요.</footer>
+<script>
+const $=id=>document.getElementById(id),ids=['p0','k','r','beta','cmax'],defaults={p0:10,k:100,r:.8,beta:.2,cmax:5};
+function pars(){return Object.fromEntries(ids.map(id=>[id,Number($(id).value)]))}
+function P(t,c,p){const A=(p.k-p.p0)/p.p0,g=p.r-p.beta*c,e=Math.exp(Math.max(-60,Math.min(60,-g*t)));return p.k/(1+A*e)}
+function draw(){const p=pars();ids.forEach(id=>$(id+'v').textContent=p[id].toFixed(['r','beta','cmax'].includes(id)?2:0));
+const ts=Array.from({length:51},(_,i)=>i*.2),cs=Array.from({length:41},(_,i)=>i*p.cmax/40),z=cs.map(c=>ts.map(t=>P(t,c,p)));
+const data=[{type:'surface',x:ts,y:cs,z,colorscale:[[0,'#14294a'],[.25,'#1b6580'],[.55,'#43b6c7'],[.8,'#9bd9c9'],[1,'#f3d17c']],showscale:true,colorbar:{title:{text:'P(t,C)',font:{color:'#c7d4e8'}},tickfont:{color:'#aab9d0'},thickness:12,len:.72},lighting:{ambient:.72,diffuse:.8,specular:.25,roughness:.55},hovertemplate:'시간 t: %{x:.1f}<br>농도 C: %{y:.2f}<br>세균 수 P: %{z:.2f}<extra></extra>'}];
+const layout={paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:0,r:8,t:0,b:0},font:{color:'#c5d3e8',family:'Inter, Noto Sans KR, sans-serif',size:11},scene:{bgcolor:'rgba(0,0,0,0)',dragmode:'orbit',xaxis:{title:'시간 t',range:[0,10],gridcolor:'#293a55',color:'#aebbd0'},yaxis:{title:'항생제 농도 C',range:[0,p.cmax],gridcolor:'#293a55',color:'#aebbd0'},zaxis:{title:'세균 개체수 P',range:[0,p.k*1.08],gridcolor:'#293a55',color:'#aebbd0'},camera:{eye:{x:1.65,y:1.65,z:1.2}},aspectmode:'manual',aspectratio:{x:1.45,y:1,z:.8}},showlegend:false};
+Plotly.react('plot',data,layout,{responsive:true,displaylogo:false,modeBarButtonsToRemove:['lasso2d','select2d']});
+const c=p.cmax/2,g=p.r-p.beta*c;$('cstar').textContent=c.toFixed(2);$('gval').textContent=g.toFixed(3);$('vmax').textContent=(g>0?g*p.k/4:0).toFixed(2);$('inflect').textContent=g>0?(p.k/2).toFixed(1):'—';
+}
+ids.forEach(id=>$(id).addEventListener('input',draw));$('reset').onclick=()=>{ids.forEach(id=>$(id).value=defaults[id]);draw()};$('camera').onclick=()=>Plotly.relayout('plot',{'scene.camera':{eye:{x:1.65,y:1.65,z:1.2},center:{x:0,y:0,z:0}}});draw();
+</script></body></html>
